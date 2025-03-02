@@ -1,0 +1,51 @@
+import * as THREE from "three";
+
+const FilmGrainShader = {
+  uniforms: {
+    tDiffuse: { value: null },  // The rendered scene texture
+    time: { value: 0.0 },       // Time uniform for animated grain
+    grainIntensity: { value: 0.3 }, // Strength of the grain effect
+    scanlineIntensity: { value: 0 }, // Intensity of scanlines
+    scanlineCount: { value: 0 }, // Number of scanlines
+    resolution: { value: new THREE.Vector2() } // Screen resolution
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float time;
+    uniform float grainIntensity;
+    uniform float scanlineIntensity;
+    uniform float scanlineCount;
+    uniform vec2 resolution;
+
+    varying vec2 vUv;
+
+    float random(vec2 uv) {
+      return fract(sin(dot(uv.xy, vec2(12.0, 42.10))) * 41985.5453);
+    }
+
+    void main() {
+      vec4 color = texture2D(tDiffuse, vUv);
+      
+      // Grain Effect: Larger grain using coarser UV coordinates
+      float grain = random(vUv * resolution.xy / 12.0 + time * 0.8) * grainIntensity;
+
+      // Scanline Effect
+      float scanline = sin(vUv.y * scanlineCount) * scanlineIntensity;
+
+      // Apply Effects
+      color.rgb = color.rgb + grain;
+      color.rgb -= scanline;
+
+      gl_FragColor = color - grain;
+    }
+  `
+};
+
+export default FilmGrainShader;
