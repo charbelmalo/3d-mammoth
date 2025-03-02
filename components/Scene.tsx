@@ -260,24 +260,25 @@ export default function Scene() {
     // Scroll States Setup
     const scrollStates = [
       {
-        cameraPosition: { x: 2, y: 5, z: 6 },
-        cameraRotation: { x: -0.6, y: 0.25, z: 0.2 },
+        cameraPosition: { x: 5, y: 2, z: 14 },
+        cameraLookAt: { x: 0, y: 2, z: 5 },
         modelPosition: { x: 0, y: 0, z: 0 },
         modelRotation: { x: 0, y: -Math.PI * 1.1, z: 0 },
         hazeMeshPosition: { x: 0.5, y: 2.8, z: 4.5 },
         hazeMeshRotation: { x: 0, y: 0, z: 0 },
       },
       {
-        cameraPosition: { x: 2, y: 5, z: 5 },
-        cameraRotation: { x: -0.6, y: 0.25, z: 0.2 },
+        cameraPosition: { x: 6, y: 2, z: 6 },
+        // cameraRotation: { x: -0.6, y: 0.25, z: 0.2 },
+        cameraLookAt: { x: 0, y: 2, z: 2},
         modelPosition: { x: 0, y: 0, z: 0 },
         modelRotation: { x: 0, y: -Math.PI * 1.1, z: 0 },
         hazeMeshPosition: { x: 0.5, y: 2.8, z: 4.5 },
         hazeMeshRotation: { x: 0, y: 0, z: 0 },
       },
       {
-        cameraPosition: { x: 2, y: 5, z: 3 },
-        cameraRotation: { x: -0.6, y: 0.25, z: 0.2 },
+        cameraPosition: { x: -14, y: 2, z: 8 },
+        cameraLookAt: { x: -3, y: 2, z: 5 },
         modelPosition: { x: 0, y: 0, z: 0 },
         modelRotation: { x: 0, y: -Math.PI * 1.1, z: 0 },
         hazeMeshPosition: { x: 0.5, y: 2.8, z: 4.5 },
@@ -304,12 +305,16 @@ export default function Scene() {
           y: state.cameraPosition.y,
           z: state.cameraPosition.z,
         });
-        gsap.to(camera.rotation, {
+        gsap.to(CAMERA_TARGET, {
           duration: 1,
-          x: state.cameraRotation.x,
-          y: state.cameraRotation.y,
-          z: state.cameraRotation.z,
+          x: state.cameraLookAt.x,
+          y: state.cameraLookAt.y,
+          z: state.cameraLookAt.z,
+          onUpdate: () => {
+            camera.lookAt(CAMERA_TARGET);
+          }
         });
+      
         if (model) {
           gsap.to(model.position, {
             duration: 1,
@@ -346,7 +351,7 @@ export default function Scene() {
     }
 
     window.addEventListener("wheel", handleScroll);
-
+   
     // Animation Loop
     function animate() {
       requestAnimationFrame(animate);
