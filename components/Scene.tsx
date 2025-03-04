@@ -95,7 +95,7 @@ export default function Scene() {
     // (OrbitControls removed)
 
     // Lighting
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
     scene.fog = new THREE.Fog(SCENE_BG_COLOR, 15, 30);
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -106,7 +106,7 @@ export default function Scene() {
     directionalLight2.castShadow = true;
     directionalLight2.position.set(-3, 2, -1);
 
-    directionalLight.position.set(-5, 10, -7);
+    directionalLight.position.set(-1, 10, -7);
     directionalLight2.shadow.camera.near = 0;
     directionalLight2.shadow.camera.far = 30;
     directionalLight2.shadow.mapSize.set(2048, 2048);
@@ -273,11 +273,11 @@ export default function Scene() {
         cameraLookAt: { x: 0, y: 2, z: 2},
         modelPosition: { x: 0, y: 0, z: 0 },
         modelRotation: { x: 0, y: -Math.PI * 1.1, z: 0 },
-        hazeMeshPosition: { x: 0.5, y: 2.8, z: 4.5 },
+        hazeMeshPosition: { x: 4, y: 2.8, z: 4.5 },
         hazeMeshRotation: { x: 0, y: 0, z: 0 },
       },
       {
-        cameraPosition: { x: -14, y: 2, z: 8 },
+        cameraPosition: { x: -14, y: 2, z: 14 },
         cameraLookAt: { x: -3, y: 2, z: 5 },
         modelPosition: { x: 0, y: 0, z: 0 },
         modelRotation: { x: 0, y: -Math.PI * 1.1, z: 0 },
