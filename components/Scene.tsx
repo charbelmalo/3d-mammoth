@@ -188,7 +188,7 @@ export default function Scene() {
         0.95
       )
     );
-    composer.addPass(new FilmPass(3, 0.1, 1, false));
+    composer.addPass(new FilmPass(2, 0.1, 1, false));
     const filmGrainPass = new ShaderPass(FilmGrainShader);
     filmGrainPass.uniforms["resolution"].value.set(window.innerWidth, window.innerHeight);
     composer.addPass(filmGrainPass);
@@ -281,6 +281,14 @@ export default function Scene() {
         cameraLookAt: { x: -3, y: 2, z: 5 },
         modelPosition: { x: 0, y: 0, z: 0 },
         modelRotation: { x: 0, y: -Math.PI * 1.1, z: 0 },
+        hazeMeshPosition: { x: 0.5, y: 2.8, z: 4.5 },
+        hazeMeshRotation: { x: 0, y: 0, z: 0 },
+      },
+      {
+        cameraPosition: { x: -12, y: 2, z: -9 },
+        cameraLookAt: { x: 0, y: 2, z: 0 },
+        modelPosition: { x: 0, y: 0, z: 0 },
+        modelRotation: { x: 0, y: -Math.PI * 1.2, z: 0 },
         hazeMeshPosition: { x: 0.5, y: 2.8, z: 4.5 },
         hazeMeshRotation: { x: 0, y: 0, z: 0 },
       },
