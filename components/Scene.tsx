@@ -84,25 +84,22 @@ export default function Scene() {
     scene.background = new THREE.Color(SCENE_BG_COLOR);
     // Function to track mouse movement and update bone rotation
     function handleMouseMove(event: MouseEvent) {
-      const mouseX = -(event.clientX / window.innerWidth) * 2 + 1;
-      const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-      const rotationFactor = Math.PI / 4; // Reduced intensity for blending
+      if (!NeckBoneRef.current) return;
     
-      if (NeckBoneRef.current) {
-        // Get the current animation rotation
-        const currentRotation = new THREE.Euler().setFromQuaternion(NeckBoneRef.current.quaternion);
-        
-        // Blend between the current animation rotation and mouse input
-        NeckBoneRef.current.rotation.set(
-          THREE.MathUtils.lerp(currentRotation.x, mouseX * rotationFactor, 0.5), // Smooth blend
-          // THREE.MathUtils.lerp(currentRotation.y, mouseY * rotationFactor, 0.5),
-          currentRotation.y,
-          THREE.MathUtils.lerp(currentRotation.z, mouseY * rotationFactor, 0.5),
-
-        );
+      const mouseY = -(event.clientX / window.innerWidth) * 2 + 1;
+      const mouseX = -(event.clientY / window.innerHeight) * 2 + 1;
+      const rotationFactor = Math.PI / 6; // Adjust for smoother blending
     
-        NeckBoneRef.current.updateMatrixWorld(true);
-      }
+      // Create a quaternion for the new mouse input
+      const targetRotation = new THREE.Quaternion();
+      targetRotation.setFromEuler(new THREE.Euler(
+        mouseY * rotationFactor,  // Look up/down
+        0,                        // No horizontal twist
+        mouseX * rotationFactor   // Look left/right
+      ));
+    
+      // Blend it with the animated rotation inside the animation loop
+      NeckBoneRef.current.userData.targetRotation = targetRotation;
     }
     // Camera Setup
     const camera = new THREE.PerspectiveCamera(
@@ -282,9 +279,17 @@ export default function Scene() {
       
       if (gltf.animations.length > 0) {
           mixer = new THREE.AnimationMixer(model);
-          const action = mixer.clipAction(gltf.animations[0]);
-          action.setEffectiveTimeScale(0.8);
-          action.play();
+        // When loading the animation:
+
+      const action = mixer.clipAction(gltf.animations[0]);
+      action.setEffectiveTimeScale(0.8);
+      action.setEffectiveWeight(1.0); // Full weight for walk animation
+      action.play();
+
+      mixer.blendMode = THREE.AdditiveAnimationBlendMode;
+      // Create an additive layer for manual control
+      const additiveAction = mixer.clipAction(gltf.animations[0]).play();
+      additiveAction.setEffectiveWeight(1.0); // Start with 0, we'll modify manually
       }
       
      
@@ -414,7 +419,19 @@ export default function Scene() {
       if (NeckBoneRef.current) {
         NeckBoneRef.current.updateMatrixWorld(true);
       }
+      // Apply the mouse movement without overriding animation
+      if (NeckBoneRef.current) {
+        const animatedRotation = NeckBoneRef.current.quaternion.clone(); // Store the animation's output
+        const targetRotation = NeckBoneRef.current.userData.targetRotation || new THREE.Quaternion();
     
+        // Blend animated pose with manual rotation
+        animatedRotation.slerp(targetRotation, 0.3);
+    
+        NeckBoneRef.current.quaternion.copy(animatedRotation);
+        NeckBoneRef.current.updateMatrixWorld(true);
+      }
+    
+      updateSnow();
       filmGrainPass.uniforms["time"].value = clock.getElapsedTime();
       composer.render();
     }
