@@ -1,0 +1,65 @@
+/* ButtonComponent.module.css */
+.ButtonPrimary_button___n8MG {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: 10.375rem;
+    height: 3rem;
+    padding: 0.4375rem 0.625rem;
+    cursor: pointer;
+    overflow-x: visible
+}
+  
+  .ButtonPrimary_svg__4g5jl {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+  
+  .ButtonPrimary_svgPath__EZ7n1 {
+    stroke-dasharray: 420px;
+    stroke-dashoffset: 420px;
+    stroke-width: 0.0625rem;
+  }
+  
+  .ButtonPrimary_rect__65_ST {
+    position: absolute;
+    bottom: 0;
+    left: -0.125rem;
+    width: 0.125rem;
+    height: 1.0625rem;
+    opacity: 0.4;
+    background-color: currentColor;
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+  }
+  
+  .ButtonPrimary_label__ucPTz {
+    font-family: 'Klamp 105', sans-serif;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  
+ 
+  
+  /* Font faces */
+  @font-face {
+    font-family: 'Klamp 105';
+    font-weight: 500;
+    src: url(https://www.mammothmeatball.com/fonts/klamp105-medium.woff2) format("woff2");
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Klamp 105';
+    font-weight: 700;
+    src: url(https://www.mammothmeatball.com/fonts/klamp105-bold.woff2) format("woff2");
+    font-display: swap;
+  }

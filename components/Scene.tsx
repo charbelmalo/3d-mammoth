@@ -37,10 +37,18 @@ export default function Scene() {
   // ✅ UseRef to track foot bones properly
   const leftFootBoneRef = useRef<THREE.Bone | null>(null);
   const rightFootBoneRef = useRef<THREE.Bone | null>(null);
+  const NeckBoneRef = useRef<THREE.Bone | null>(null);
 
   useEffect(() => {
+    
     if (!containerRef.current) return;
-
+    const threejsCanvas = containerRef.current;
+    gsap.to(threejsCanvas, {
+      opacity: 1,
+      duration: 2,
+      delay: 1,
+      ease: "power4.inOut",
+      });
     // Scene Setup
     const scene = new THREE.Scene();
     let footprint = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), footprintMaterial);
@@ -74,7 +82,28 @@ export default function Scene() {
   }
   
     scene.background = new THREE.Color(SCENE_BG_COLOR);
+    // Function to track mouse movement and update bone rotation
+    function handleMouseMove(event: MouseEvent) {
+      const mouseX = -(event.clientX / window.innerWidth) * 2 + 1;
+      const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+      const rotationFactor = Math.PI / 4; // Reduced intensity for blending
+    
+      if (NeckBoneRef.current) {
+        // Get the current animation rotation
+        const currentRotation = new THREE.Euler().setFromQuaternion(NeckBoneRef.current.quaternion);
+        
+        // Blend between the current animation rotation and mouse input
+        NeckBoneRef.current.rotation.set(
+          THREE.MathUtils.lerp(currentRotation.x, mouseX * rotationFactor, 0.5), // Smooth blend
+          // THREE.MathUtils.lerp(currentRotation.y, mouseY * rotationFactor, 0.5),
+          currentRotation.y,
+          THREE.MathUtils.lerp(currentRotation.z, mouseY * rotationFactor, 0.5),
 
+        );
+    
+        NeckBoneRef.current.updateMatrixWorld(true);
+      }
+    }
     // Camera Setup
     const camera = new THREE.PerspectiveCamera(
       25,
@@ -222,7 +251,7 @@ export default function Scene() {
       snow.geometry.attributes.position.needsUpdate = true;
     }
 
-    
+
     // Load Model
     let model: THREE.Object3D | undefined;
     new GLTFLoader().load(MODEL_PATH, (gltf) => {
@@ -240,6 +269,10 @@ export default function Scene() {
           if (skinnedMesh.skeleton) {
             leftFootBoneRef.current = skinnedMesh.skeleton.getBoneByName("BackL003");
             rightFootBoneRef.current = skinnedMesh.skeleton.getBoneByName("BackR003");
+            NeckBoneRef.current = skinnedMesh.skeleton.getBoneByName("Spine005");
+
+    // Add mouse move event listener
+           window.addEventListener("mousemove", handleMouseMove);
           }
         }
       });
@@ -253,7 +286,7 @@ export default function Scene() {
           action.setEffectiveTimeScale(0.8);
           action.play();
       }
-  
+      
      
   });
 
@@ -304,6 +337,9 @@ export default function Scene() {
       } else if (event.deltaY < 0) {
         newState = Math.max(0, currentState - 1);
       }
+      //  if (currentState === scrollStates.length - 1){
+      //   newState = 0;
+      // }
       if (newState !== currentState) {
         currentState = newState;
         const state = scrollStates[currentState];
@@ -364,20 +400,23 @@ export default function Scene() {
     function animate() {
       requestAnimationFrame(animate);
       if (mixer) mixer.update(clock.getDelta());
+    
       updateSnow();
-      
+    
       if (leftFootBoneRef.current && isLeftFootOnGround(leftFootBoneRef.current)) {
         setTimeout(() => { addFootPrint(leftFootBoneRef.current); }, 100);
       } 
       if (rightFootBoneRef.current && isRightFootOnGround(rightFootBoneRef.current)) {
         setTimeout(() => { addFootPrint(rightFootBoneRef.current); }, 100);
       }
-      fadeOutFootprint(footprint);
-      // console.log(minFootBoneValue);
-      filmGrainPass.uniforms["time"].value = clock.getElapsedTime() / 400;
+    
+      // **Force NeckBone transformation after animation update**
+      if (NeckBoneRef.current) {
+        NeckBoneRef.current.updateMatrixWorld(true);
+      }
+    
+      filmGrainPass.uniforms["time"].value = clock.getElapsedTime();
       composer.render();
-      // console.log("position: "+camera.position.x, camera.position.y, camera.position.z);
-      // console.log("rotation: "+camera.rotation.x, camera.rotation.y, camera.rotation.z);
     }
     animate();
 
@@ -399,12 +438,10 @@ export default function Scene() {
     };
   }, []);
 
-  return <div ref={containerRef} className="fixed inset-0" />;
+  return <div ref={containerRef} className="fixed inset-0 canvas-threejs" style={{opacity: 0}} />;
 
 }
 function isLeftFootOnGround(footBone: THREE.Bone | null) {
-
-  console.log(footBone ? footBone.quaternion._z : 0);
   return footBone ? footBone.quaternion._z >= 0.34 : false; //0.40445834415888
 }
 function isRightFootOnGround(footBone: THREE.Bone | null) {

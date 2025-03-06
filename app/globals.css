@@ -15,9 +15,13 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+@theme{
+  --font-serif: STIX Two Text, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
 
 @layer base {
   :root {
+    --font-serif: STIX Two Text, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -80,7 +84,9 @@
     @apply bg-background text-foreground;
   }
 }
-
+.font-main{
+  font-family: Klamp\ 105, sans-serif;
+}
 .LineBlock_container__FauJJ {
   position: relative;
   width: 100%;
