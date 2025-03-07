@@ -255,6 +255,7 @@ export default function Scene() {
     let model: THREE.Object3D | undefined;
     new GLTFLoader().load(MODEL_PATH, (gltf: any) => {
       model = gltf.scene;
+      let neckBone: THREE.Bone | null = null;
       model.position.set(0, 0, 0);
       model.rotation.set(0, -Math.PI * 1.1, 0);
       model.scale.set(1, 1, 1);
@@ -269,10 +270,13 @@ export default function Scene() {
           if (skinnedMesh.skeleton) {
             leftFootBoneRef.current = skinnedMesh.skeleton.getBoneByName("BackL003");
             rightFootBoneRef.current = skinnedMesh.skeleton.getBoneByName("BackR003");
-            NeckBoneRef.current = skinnedMesh.skeleton.getBoneByName("Spine005");
+            neckBone = skinnedMesh.skeleton.getBoneByName("Spine005");
 
     // Add mouse move event listener
-          window.addEventListener("mousemove", handleMouseMove);
+          if (neckBone) {
+        NeckBoneRef.current = neckBone;
+        window.addEventListener("mousemove", handleMouseMove);
+    }
           }
         }
       });
@@ -352,8 +356,11 @@ export default function Scene() {
         currentState = newState;
         const state = scrollStates[currentState];
         // Play scroll change audio
-        scrollAudio.current.currentTime = 0;
-        scrollAudio.current.play();
+        if (scrollAudio.current){
+
+          scrollAudio.current.currentTime = 0;
+          scrollAudio.current.play();
+        }
         gsap.to(camera.position, {
           duration: 1,
           x: state.cameraPosition.x,
