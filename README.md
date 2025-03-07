@@ -75,5 +75,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Assumptions and Limitations
 
-The model and the scene have been constructed based on the Mammoth Meatballs website without an exact 3D scene to follow, so some variables are approximated and may not be 100% accurate. For the noise layer, it has been added to the 3D scene itself rather than site-wide for simplicity's sake and to complete the assessment exercise on time. The project structure has been implemented in Next.js; however, further improvements can be made with closer adherence to best practices. Additionally, the left and right foot bone references are triggered based on a hard-coded quaternion parameter, as access to the full 3D scene was limited, meaning that the bone linkage to the ground layer may not always be perfectly aligned.
+- **Scene Construction**: The model and the scene have been constructed based on the Mammoth Meatballs website without an exact 3D scene to follow, so some variables are approximated and may not be 100% accurate.
+- **Custom Grain Shader**: For the noise layer, it has been custom-made using threejs fragment shader and it has been added to the 3D scene itself rather than site-wide for simplicity's sake and to complete the assessment exercise on time.
+- **Next.js Project structure**: The project structure has been implemented in Next.js; however, further improvements can be made with closer adherence to best practices.
+- **Footprint Linking**: The left and right foot bone references are triggered based on a hard-coded quaternion parameter, as access to the full 3D scene was limited, meaning that the bone linkage to the ground layer may not always be perfectly aligned.
+
 ```
