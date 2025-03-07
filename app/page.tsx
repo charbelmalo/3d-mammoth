@@ -17,6 +17,7 @@ const Scene = dynamic(() => import("@/components/Scene"), {
 
 });
 
+const siteAudio = new Audio("/assets/audio/background_audio.mp3");
 export default function Home() {
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const [showIntro, setShowIntro] = useState(true);
@@ -24,11 +25,12 @@ export default function Home() {
   useEffect(() => {
     if(pageContainerRef.current) {
     const introText = pageContainerRef.current.querySelectorAll(".intro-screen > h1,p,button");
+    
     gsap.to(introText, {
       opacity: 1,
       y: -50,
       duration: 2,
-      stagger: 0.3,
+      stagger: 1,
       ease: "power4.out",
     });}
     if (!showIntro && pageContainerRef.current) {
@@ -62,6 +64,11 @@ export default function Home() {
   }, [showIntro]);
 
   const handleEnterSite = () => {
+    // Play scroll change audio
+    siteAudio.currentTime = 0;
+    siteAudio.autoplay = true;
+    siteAudio.loop = true;
+    siteAudio.play();
     gsap.to(".intro-screen", {
       opacity: 0,
       duration: 1,

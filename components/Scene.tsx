@@ -11,7 +11,7 @@ import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass";
 import { SMAAPass } from "three/examples/jsm/postprocessing/SMAAPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
-import FilmGrainShader from "../shaders/FilmGrainShader"; 
+import FilmGrainShader from "@/shaders/FilmGrainShader"; 
 import gsap from "gsap";
 
 const SCENE_BG_COLOR = "#666";
@@ -46,13 +46,14 @@ export default function Scene() {
     gsap.to(threejsCanvas, {
       opacity: 1,
       duration: 2,
-      delay: 1,
+      delay: 0,
       ease: "power4.inOut",
       });
     // Scene Setup
     const scene = new THREE.Scene();
     let footprint = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), footprintMaterial);
   
+    const scrollAudio = new Audio("/assets/audio/crystalline_sound.mp3");
     function addFootPrint(footBone: THREE.Bone | null) {
       if (!footBone) return;
     
@@ -71,7 +72,7 @@ export default function Scene() {
       scene.add(newFootprint);
     
     }
-    function fadeOutFootprint(mesh) {
+    function fadeOutFootprint(mesh: THREE.Mesh) {
       const fadeInterval = setInterval(() => {
           mesh.position.z -= 0.1;
           if (mesh.position.z <= -10) {
@@ -251,13 +252,13 @@ export default function Scene() {
 
     // Load Model
     let model: THREE.Object3D | undefined;
-    new GLTFLoader().load(MODEL_PATH, (gltf) => {
+    new GLTFLoader().load(MODEL_PATH, (gltf: any) => {
       model = gltf.scene;
       model.position.set(0, 0, 0);
       model.rotation.set(0, -Math.PI * 1.1, 0);
       model.scale.set(1, 1, 1);
   
-   model.traverse((child) => {
+   model.traverse((child: any) => {
         if ((child as THREE.SkinnedMesh).isMesh) {
           const skinnedMesh = child as THREE.SkinnedMesh;
           child.castShadow = true;
@@ -348,6 +349,9 @@ export default function Scene() {
       if (newState !== currentState) {
         currentState = newState;
         const state = scrollStates[currentState];
+        // Play scroll change audio
+        scrollAudio.currentTime = 0;
+        scrollAudio.play();
         gsap.to(camera.position, {
           duration: 1,
           x: state.cameraPosition.x,
