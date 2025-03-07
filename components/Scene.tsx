@@ -39,8 +39,10 @@ export default function Scene() {
   const rightFootBoneRef = useRef<THREE.Bone | null>(null);
   const NeckBoneRef = useRef<THREE.Bone | null>(null);
 
+  const scrollAudio = useRef<HTMLAudioElement | null>(null);
   useEffect(() => {
     
+    scrollAudio.current = new Audio("/assets/audio/crystalline_sound.mp3");
     if (!containerRef.current) return;
     const threejsCanvas = containerRef.current;
     gsap.to(threejsCanvas, {
@@ -53,7 +55,6 @@ export default function Scene() {
     const scene = new THREE.Scene();
     let footprint = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), footprintMaterial);
   
-    const scrollAudio = new Audio("/assets/audio/crystalline_sound.mp3");
     function addFootPrint(footBone: THREE.Bone | null) {
       if (!footBone) return;
     
@@ -259,6 +260,7 @@ export default function Scene() {
       model.scale.set(1, 1, 1);
   
    model.traverse((child: any) => {
+    
         if ((child as THREE.SkinnedMesh).isMesh) {
           const skinnedMesh = child as THREE.SkinnedMesh;
           child.castShadow = true;
@@ -270,7 +272,7 @@ export default function Scene() {
             NeckBoneRef.current = skinnedMesh.skeleton.getBoneByName("Spine005");
 
     // Add mouse move event listener
-           window.addEventListener("mousemove", handleMouseMove);
+          window.addEventListener("mousemove", handleMouseMove);
           }
         }
       });
@@ -350,8 +352,8 @@ export default function Scene() {
         currentState = newState;
         const state = scrollStates[currentState];
         // Play scroll change audio
-        scrollAudio.currentTime = 0;
-        scrollAudio.play();
+        scrollAudio.current.currentTime = 0;
+        scrollAudio.current.play();
         gsap.to(camera.position, {
           duration: 1,
           x: state.cameraPosition.x,
@@ -449,6 +451,7 @@ export default function Scene() {
       composer.setSize(window.innerWidth, window.innerHeight);
     }
     window.addEventListener("resize", handleResize);
+
 
     // Cleanup
     return () => {

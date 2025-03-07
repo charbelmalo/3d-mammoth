@@ -349,7 +349,7 @@ It is clear that we need to radically change the way we eat.
             />
             <span
               className="LineBlock_block__DACyE"
-              style={{ transform: "translate(-224px, 0px)" }}
+              style={{ transform: "translate(-290px, 0px)" }}
             />
           </div>
           <img
