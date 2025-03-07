@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState} from "react";
 import gsap from "gsap";
 import dynamic from "next/dynamic";
 
@@ -17,12 +17,16 @@ const Scene = dynamic(() => import("@/components/Scene"), {
 
 });
 
-const siteAudio = new Audio("/assets/audio/background_audio.mp3");
 export default function Home() {
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const [showIntro, setShowIntro] = useState(true);
   const buttonRef = useRef<ButtonComponentHandle>(null);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   useEffect(() => {
+    audioRef.current = new Audio("/assets/audio/background_audio.mp3");
+
     if(pageContainerRef.current) {
     const introText = pageContainerRef.current.querySelectorAll(".intro-screen > h1,p,button");
     
@@ -65,10 +69,12 @@ export default function Home() {
 
   const handleEnterSite = () => {
     // Play scroll change audio
-    siteAudio.currentTime = 0;
-    siteAudio.autoplay = true;
-    siteAudio.loop = true;
-    siteAudio.play();
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.autoplay = true;
+      audioRef.current.loop = true;
+      audioRef.current.play();
+    }
     gsap.to(".intro-screen", {
       opacity: 0,
       duration: 1,
