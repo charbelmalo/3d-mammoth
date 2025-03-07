@@ -80,4 +80,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Next.js Project structure**: The project structure has been implemented in Next.js; however, further improvements can be made with closer adherence to best practices.
 - **Footprint Linking**: The left and right foot bone references are triggered based on a hard-coded quaternion parameter, as access to the full 3D scene was limited, meaning that the bone linkage to the ground layer may not always be perfectly aligned.
 
-```
