@@ -1,9 +1,5 @@
 <div style="display: flex; align-items: center; margin-bottom: 20px;">
   <img src="banner.png" alt="Logo" style="height: 100px; width: auto; margin-right: 20px;">
-  <div>
-    <h1 style="margin: 0;">VML ASSESSMENT EXERCISE</h1>
-    <p style="margin: 0;">MAMMOTH 3D RECREATION</p>
-  </div>
 </div>
 
 # README for Interactive 3D Web Experience
