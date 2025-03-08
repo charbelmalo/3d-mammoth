@@ -1,5 +1,5 @@
 <div style="display: flex; align-items: center; margin-bottom: 20px;">
-  <img src="banner.webp" alt="Logo" style="height: 100px; width: auto; margin-right: 20px;">
+  <img src="banner.webp" alt="Logo" style="height: 100px; width: auto; margin-right: 20px; object-fit: contain">
 </div>
 
 # README for Interactive 3D Web Experience
